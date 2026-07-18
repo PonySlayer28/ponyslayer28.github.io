@@ -1,61 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
-  <!-- background -->
-  <rect width="800" height="600" fill="#4a2a7a"/>
-  <rect width="800" height="300" fill="#3a1f5d"/>
-  <circle cx="650" cy="120" r="65" fill="#efe3ff"/>
-  <circle cx="628" cy="105" r="65" fill="#3a1f5d"/>
-  <g fill="#ffffff">
-    <circle cx="120" cy="90" r="3"/><circle cx="210" cy="60" r="2.5"/><circle cx="310" cy="120" r="2.5"/>
-    <circle cx="480" cy="80" r="2.5"/><circle cx="120" cy="210" r="2"/><circle cx="400" cy="50" r="2.5"/>
-    <circle cx="540" cy="160" r="2"/><circle cx="80" cy="150" r="2.5"/>
-  </g>
-
-  <!-- ground -->
-  <path d="M0 520 Q400 470 800 520 L800 600 L0 600 Z" fill="#311b46"/>
-  <ellipse cx="400" cy="540" rx="230" ry="26" fill="#26143a"/>
-
-  <!-- Tyranno (flat) -->
-  <g transform="translate(230,140)">
-    <!-- tail -->
-    <path d="M70 320 Q-90 330 -170 390 Q-70 350 60 350 Z" fill="#9575cd"/>
-    <!-- far leg -->
-    <path d="M210 320 Q235 410 200 440 L250 440 Q258 360 250 315 Z" fill="#7e57c2"/>
-    <!-- body -->
-    <path d="M60 210 Q40 120 150 95 Q260 78 300 165 Q330 250 270 330 Q190 375 100 340 Q45 300 60 210 Z" fill="#b388ff"/>
-    <!-- belly -->
-    <path d="M140 215 Q135 320 225 335 Q255 260 230 200 Q180 182 140 215 Z" fill="#e6dbff"/>
-    <!-- near leg -->
-    <path d="M150 330 Q160 425 120 450 L172 450 Q198 375 200 325 Z" fill="#9575cd"/>
-    <!-- foot -->
-    <path d="M110 448 q-15 8 -2 16 l70 0 q10 -8 -5 -16 Z" fill="#7e57c2"/>
-    <!-- tiny arm -->
-    <path d="M250 215 q42 8 60 34 q-16 -4 -30 2 q11 7 9 18 q-26 -22 -50 -32 Z" fill="#9575cd"/>
-    <!-- head -->
-    <path d="M250 110 Q345 88 378 142 Q394 174 366 196 L286 200 Q244 188 240 150 Z" fill="#b388ff"/>
-    <!-- lower jaw -->
-    <path d="M300 190 Q360 200 372 192 Q380 216 336 222 Q300 216 300 190 Z" fill="#9575cd"/>
-    <!-- teeth -->
-    <g fill="#ffffff">
-      <polygon points="312,196 318,212 324,196"/>
-      <polygon points="332,198 338,214 344,198"/>
-      <polygon points="352,196 358,210 364,196"/>
-    </g>
-    <!-- eye white + pupil -->
-    <circle cx="332" cy="140" r="14" fill="#ffffff"/>
-    <circle cx="336" cy="142" r="7" fill="#241133"/>
-    <circle cx="339" cy="138" r="2.5" fill="#ffffff"/>
-    <!-- nostril -->
-    <circle cx="374" cy="152" r="3.5" fill="#5e35b1"/>
-    <!-- back spikes -->
-    <g fill="#ce93d8">
-      <polygon points="150,96 162,72 176,98"/>
-      <polygon points="196,86 208,60 222,90"/>
-      <polygon points="92,150 74,134 100,140"/>
-      <polygon points="60,210 40,200 64,196"/>
-    </g>
-    <!-- cheek blush -->
-    <ellipse cx="300" cy="170" rx="12" ry="7" fill="#f48fb1" opacity="0.6"/>
-  </g>
-
-  <text x="400" y="565" font-family="Georgia, serif" font-size="32" fill="#e6dbff" text-anchor="middle" font-style="italic">Ein lila Gru&#223; vom Tyranno</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <circle cx="100" cy="100" r="90" fill="none" stroke="#C4956A" stroke-width="4"/>
+  <line x1="100" y1="38" x2="100" y2="162" stroke="#F0E4D4" stroke-width="6" stroke-linecap="round"/>
+  <line x1="100" y1="60" x2="62" y2="42" stroke="#F0E4D4" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="100" y1="60" x2="140" y2="46" stroke="#F0E4D4" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="100" y1="90" x2="58" y2="78" stroke="#E8D5BC" stroke-width="4" stroke-linecap="round"/>
+  <line x1="100" y1="90" x2="144" y2="82" stroke="#E8D5BC" stroke-width="4" stroke-linecap="round"/>
 </svg>
