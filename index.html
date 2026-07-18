@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patrick Merkert – Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1008;
+      --bg2: #241a0e;
+      --bg3: #2e2115;
+      --accent: #C4956A;
+      --accent2: #D4BFA5;
+      --text: #F0E4D4;
+      --muted: #8B5E3C;
+      --card: #241a0e;
+      --border: #3a2a18;
+      --cream: #E8D5BC;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(15,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-name { font-family: 'Cinzel', Georgia, serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .lang-btn {
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--text); padding: 0.3rem 0.8rem; border-radius: 20px;
+      cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+    }
+    .lang-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 40%, #2e1c0a 0%, var(--bg) 70%);
+      padding: 6rem 2rem 4rem;
+    }
+    .hero-inner { max-width: 700px; }
+    .hero-badge {
+      display: inline-block;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--accent); font-size: 0.8rem; padding: 0.3rem 1rem;
+      border-radius: 20px; margin-bottom: 1.5rem; letter-spacing: 0.05em;
+    }
+    .hero h1 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700; line-height: 1.1;
+      background: linear-gradient(135deg, var(--cream) 40%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    .hero-sub {
+      font-size: 1.15rem; color: var(--muted);
+      max-width: 540px; margin: 0 auto 2rem;
+    }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+    .tag {
+      background: var(--bg3); border: 1px solid var(--border);
+      padding: 0.35rem 0.9rem; border-radius: 20px;
+      font-size: 0.82rem; color: var(--muted);
+    }
+
+    /* SECTIONS */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem; letter-spacing: 0.12em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700; margin-bottom: 0.5rem;
+    }
+    .section-desc { color: var(--muted); margin-bottom: 3rem; max-width: 560px; }
+
+    /* PROJECTS GRID */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .project-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .project-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 30px rgba(108,142,245,0.12);
+    }
+    .project-icon {
+      font-size: 2rem; margin-bottom: 0.75rem;
+      display: block;
+    }
+    .project-card h3 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+    .project-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+    .project-tag {
+      background: var(--bg3); border: 1px solid var(--border);
+      font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 10px;
+      color: var(--muted);
+    }
+    .project-card.featured { border-color: var(--accent2); }
+    .project-card.featured .project-icon::after {
+      content: " ★";
+      font-size: 0.7rem;
+      color: var(--accent2);
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .skill-group {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.25rem;
+    }
+    .skill-group h4 {
+      font-size: 0.82rem; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .skill-group ul { list-style: none; }
+    .skill-group li {
+      font-size: 0.88rem; color: var(--muted);
+      padding: 0.2rem 0;
+    }
+    .skill-group li::before { content: "· "; color: var(--accent); }
+
+    /* ABOUT */
+    #about { background: var(--bg2); }
+    .about-text { font-size: 1.05rem; color: var(--muted); max-width: 680px; line-height: 1.8; }
+    .about-text strong { color: var(--text); }
+
+    /* CONTACT */
+    #contact { background: var(--bg2); text-align: center; }
+    .contact-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem; display: inline-block;
+      max-width: 480px; width: 100%;
+    }
+    .contact-box h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .contact-box p { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .contact-email {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white; text-decoration: none;
+      padding: 0.75rem 2rem; border-radius: 8px;
+      font-weight: 600; transition: opacity 0.2s;
+    }
+    .contact-email:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem; text-align: center;
+      color: var(--muted); font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* LANG TOGGLE */
+    [data-lang] { display: none; }
+    body.lang-de [data-lang="de"] { display: block; }
+    body.lang-de [data-lang="de"].inline { display: inline; }
+    body.lang-de [data-lang="de"].flex { display: flex; }
+    body.lang-en [data-lang="en"] { display: block; }
+    body.lang-en [data-lang="en"].inline { display: inline; }
+    body.lang-en [data-lang="en"].flex { display: flex; }
+
+    @media (max-width: 600px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { gap: 1rem; }
+      section { padding: 3.5rem 1rem; }
+    }
+  </style>
+</head>
+<body class="lang-de">
+
+<!-- NAV -->
+<nav>
+  <span class="nav-name">Patrick Merkert</span>
+  <div class="nav-links">
+    <a href="#about" data-lang="de">Über mich</a>
+    <a href="#about" data-lang="en">About</a>
+    <a href="#projects" data-lang="de">Projekte</a>
+    <a href="#projects" data-lang="en">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+    <button class="lang-btn" onclick="toggleLang()">EN / DE</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-badge" data-lang="de">👋 Willkommen auf meiner Seite</div>
+    <div class="hero-badge" data-lang="en">👋 Welcome to my page</div>
+
+    <h1>Patrick Merkert</h1>
+
+    <p class="hero-sub" data-lang="de">
+      Media & Tech-Enthusiast aus München. Ich baue Tools, automatisiere Prozesse und experimentiere mit KI — nach Feierabend.
+    </p>
+    <p class="hero-sub" data-lang="en">
+      Media & tech enthusiast from Munich. I build tools, automate workflows and experiment with AI — after hours.
+    </p>
+
+    <div class="hero-tags flex" data-lang="de" style="display:flex">
+      <span class="tag">🤖 KI & Automatisierung</span>
+      <span class="tag">🎵 Audio Production</span>
+      <span class="tag">🖥️ Home Lab</span>
+      <span class="tag">📺 Medien & Broadcasting</span>
+    </div>
+    <div class="hero-tags flex" data-lang="en">
+      <span class="tag">🤖 AI & Automation</span>
+      <span class="tag">🎵 Audio Production</span>
+      <span class="tag">🖥️ Home Lab</span>
+      <span class="tag">📺 Media & Broadcasting</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-label" data-lang="de">Über mich</div>
+    <div class="section-label" data-lang="en">About me</div>
+    <h2 class="section-title" data-lang="de">Wer ich bin</h2>
+    <h2 class="section-title" data-lang="en">Who I am</h2>
+
+    <p class="about-text" data-lang="de">
+      Ich bin in der <strong>Medienbranche</strong> zu Hause — mit Wurzeln in der Filmpostproduktion (Bavaria Film) und seit über 20 Jahren im TV-Werbevermarktung tätig. Neben dem Beruf habe ich mich intensiv mit <strong>KI-Tools, Home-Automatisierung und Audio-Produktion</strong> beschäftigt. Ich liebe es, Dinge selbst zu bauen: von kleinen Skripten die meinen Alltag erleichtern bis hin zu komplexeren Automatisierungen rund um meinen Home Server.
+    </p>
+    <p class="about-text" data-lang="en">
+      I'm rooted in the <strong>media industry</strong> — starting in film post-production (Bavaria Film) and working in TV advertising for over 20 years. Outside of work, I've dived deep into <strong>AI tools, home automation and audio production</strong>. I love building things: from small scripts that simplify daily life to more complex automations around my home server.
+    </p>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label" data-lang="de">Was ich gebaut habe</div>
+    <div class="section-label" data-lang="en">What I've built</div>
+    <h2 class="section-title" data-lang="de">Projekte</h2>
+    <h2 class="section-title" data-lang="en">Projects</h2>
+    <p class="section-desc" data-lang="de">Dinge die ich in meiner Freizeit gebaut, automatisiert oder ausprobiert habe.</p>
+    <p class="section-desc" data-lang="en">Things I've built, automated or experimented with in my spare time.</p>
+
+    <div class="projects-grid">
+
+      <!-- TyrannoFi -->
+      <div class="project-card featured">
+        <span class="project-icon">📬</span>
+        <h3>TyrannoFi</h3>
+        <p data-lang="de">KI-gestützter E-Mail-Scanner und Organizer — analysiert eingehende Mails, filtert, kategorisiert und reagiert nach definierten Regeln. Läuft 24/7 auf meinem Home-Server.</p>
+        <p data-lang="en">AI-powered email scanner and organizer — analyses incoming mails, filters, categorizes and responds based on custom rules. Runs 24/7 on my home server.</p>
+        <div class="project-tags">
+          <span class="project-tag">Python</span>
+          <span class="project-tag">AI / LLM</span>
+          <span class="project-tag">IMAP</span>
+          <span class="project-tag">Home Server</span>
+        </div>
+      </div>
+
+      <!-- Home Lab -->
+      <div class="project-card">
+        <span class="project-icon">🖥️</span>
+        <h3>Home Lab & Automation</h3>
+        <p data-lang="de">Raspberry Pi 5 als NAS, Medienserver und Automatisierungs-Hub. Eigenes Netzwerk-Monitoring, Wake-on-LAN, automatische Backups und KI-gestützte Cronjobs.</p>
+        <p data-lang="en">Raspberry Pi 5 as NAS, media server and automation hub. Custom network monitoring, Wake-on-LAN, automated backups and AI-driven cron jobs.</p>
+        <div class="project-tags">
+          <span class="project-tag">Raspberry Pi</span>
+          <span class="project-tag">Linux</span>
+          <span class="project-tag">Bash</span>
+          <span class="project-tag">Samba / NAS</span>
+        </div>
+      </div>
+
+      <!-- KI Assistent -->
+      <div class="project-card">
+        <span class="project-icon">🤖</span>
+        <h3 data-lang="de">KI-Persönlicher Assistent</h3>
+        <h3 data-lang="en">AI Personal Assistant</h3>
+        <p data-lang="de">Tägliches Briefing (Wetter, News, Crypto, Kalender) vollautomatisch per Claude AI. Telegram-Integration, Sprachausgabe, Nachrichtenfilterung nach Interessen.</p>
+        <p data-lang="en">Daily briefing (weather, news, crypto, calendar) fully automated via Claude AI. Telegram integration, text-to-speech, news filtered by interest.</p>
+        <div class="project-tags">
+          <span class="project-tag">Claude AI</span>
+          <span class="project-tag">Telegram</span>
+          <span class="project-tag">Cron</span>
+          <span class="project-tag">APIs</span>
+        </div>
+      </div>
+
+      <!-- Excel Automation -->
+      <div class="project-card">
+        <span class="project-icon">📊</span>
+        <h3>Excel Automation</h3>
+        <p data-lang="de">VBA-Makros zur automatischen Verarbeitung von Mediadaten — z.B. Aufteilen kombinierter Spalten (LP/Sek), Euro-Formatierung, Batch-Verarbeitung beliebiger Dateien.</p>
+        <p data-lang="en">VBA macros for automatic processing of media data — e.g. splitting combined columns (LP/Sec), Euro formatting, batch processing of any similarly structured file.</p>
+        <div class="project-tags">
+          <span class="project-tag">VBA</span>
+          <span class="project-tag">Excel</span>
+          <span class="project-tag">Python</span>
+          <span class="project-tag">Mediadaten</span>
+        </div>
+      </div>
+
+      <!-- Audio Production -->
+      <div class="project-card">
+        <span class="project-icon">🎵</span>
+        <h3>Audio Production</h3>
+        <p data-lang="de">Musik- und Audioproduktion mit Ableton Live. Früher Live-Produktion und Moderation bei einem Webradio-Sender (2003–2004) — von der Aufnahme bis zum Sendebetrieb.</p>
+        <p data-lang="en">Music and audio production with Ableton Live. Former live production and on-air hosting at a web radio station (2003–2004) — from recording to broadcast.</p>
+        <div class="project-tags">
+          <span class="project-tag">Ableton Live</span>
+          <span class="project-tag">DAW</span>
+          <span class="project-tag">Live Radio</span>
+          <span class="project-tag">Audio Editing</span>
+        </div>
+      </div>
+
+      <!-- Security / Monitoring -->
+      <div class="project-card">
+        <span class="project-icon">🔐</span>
+        <h3 data-lang="de">Netzwerk-Monitoring</h3>
+        <h3 data-lang="en">Network Monitoring</h3>
+        <p data-lang="de">Suricata IDS, Kamera-Integration (Tapo RTSP), automatische Sicherheits-Alerts per Telegram. Überwachung des Heimnetzwerks mit eigenen Skripten.</p>
+        <p data-lang="en">Suricata IDS, camera integration (Tapo RTSP), automatic security alerts via Telegram. Home network monitoring with custom scripts.</p>
+        <div class="project-tags">
+          <span class="project-tag">Suricata</span>
+          <span class="project-tag">RTSP</span>
+          <span class="project-tag">Telegram</span>
+          <span class="project-tag">Linux</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" style="background: var(--bg2);">
+  <div class="container">
+    <div class="section-label">Skills</div>
+    <h2 class="section-title" data-lang="de">Was ich kann</h2>
+    <h2 class="section-title" data-lang="en">What I know</h2>
+    <p class="section-desc" data-lang="de">Technologien und Bereiche mit denen ich regelmäßig arbeite.</p>
+    <p class="section-desc" data-lang="en">Technologies and areas I work with regularly.</p>
+
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h4>AI & Automation</h4>
+        <ul>
+          <li>Claude AI / LLMs</li>
+          <li>OpenClaw / MCP</li>
+          <li>Prompt Engineering</li>
+          <li>Workflow Automation</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h4 data-lang="de">Scripting & Tools</h4>
+        <h4 data-lang="en">Scripting & Tools</h4>
+        <ul>
+          <li>Bash / Shell</li>
+          <li>Python</li>
+          <li>VBA / Excel</li>
+          <li>Git</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h4 data-lang="de">Infrastruktur</h4>
+        <h4 data-lang="en">Infrastructure</h4>
+        <ul>
+          <li>Linux (Raspberry Pi OS)</li>
+          <li>Samba / NAS</li>
+          <li>Cron / Systemd</li>
+          <li>SSH / WoL</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h4>Media & Audio</h4>
+        <ul>
+          <li>Ableton Live</li>
+          <li>Audio Editing / DAW</li>
+          <li>Broadcasting</li>
+          <li>Postproduktion</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title" data-lang="de" style="text-align:center">Kontakt</h2>
+    <h2 class="section-title" data-lang="en" style="text-align:center">Get in touch</h2>
+    <br>
+    <div style="display:flex; justify-content:center;">
+      <div class="contact-box">
+        <h3 data-lang="de">Schreib mir</h3>
+        <h3 data-lang="en">Say hello</h3>
+        <p data-lang="de">Interesse an einem Projekt oder Austausch? Einfach mailen.</p>
+        <p data-lang="en">Interested in a project or just want to connect? Drop me a mail.</p>
+        <a href="mailto:patrick.merkert@gmail.com" class="contact-email">patrick.merkert@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Patrick Merkert · München</p>
+</footer>
+
+<script>
+  function toggleLang() {
+    const body = document.body;
+    if (body.classList.contains('lang-de')) {
+      body.classList.replace('lang-de', 'lang-en');
+    } else {
+      body.classList.replace('lang-en', 'lang-de');
+    }
+  }
+
+  // Fix: show correct lang elements on load
+  document.querySelectorAll('[data-lang]').forEach(el => {
+    const lang = el.getAttribute('data-lang');
+    const isInline = window.getComputedStyle(el).display === 'inline';
+    if (isInline) el.classList.add('inline');
+  });
+</script>
+</body>
+</html>
