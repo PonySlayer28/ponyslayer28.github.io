@@ -206,6 +206,61 @@
       .nav-links { gap: 1rem; }
       section { padding: 3.5rem 1rem; }
     }
+
+    /* HERO GLOW ORBS */
+    .hero { position: relative; overflow: hidden; }
+    .hero-orb {
+      position: absolute; border-radius: 50%; filter: blur(60px);
+      opacity: 0.35; pointer-events: none; z-index: 0;
+    }
+    .hero-orb.o1 { width: 320px; height: 320px; background: var(--accent); top: 10%; left: 8%; animation: float1 14s ease-in-out infinite; }
+    .hero-orb.o2 { width: 260px; height: 260px; background: var(--accent2); bottom: 5%; right: 10%; animation: float2 18s ease-in-out infinite; }
+    .hero-inner { position: relative; z-index: 1; }
+    @keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,-20px); } }
+    @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-25px,25px); } }
+
+    /* HIGHLIGHTS LIST */
+    .project-highlights {
+      list-style: none; margin: 0.9rem 0 0; padding: 0;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .project-highlights li {
+      font-size: 0.83rem; color: var(--muted); line-height: 1.5;
+      padding-left: 1.1rem; position: relative;
+    }
+    .project-highlights li::before {
+      content: "▸"; position: absolute; left: 0; color: var(--accent);
+    }
+
+    /* STATS STRIP */
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap: 1rem; margin-top: 2.5rem;
+    }
+    .stat-box {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.1rem; text-align: center;
+    }
+    .stat-box .stat-num {
+      font-family: 'Cinzel', Georgia, serif; font-size: 1.6rem;
+      font-weight: 700; color: var(--accent); display: block;
+    }
+    .stat-box .stat-label {
+      font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* SECTION DIVIDER GLOW */
+    section:not(.hero)::before {
+      content: ""; display: block; width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin: 0 auto 2.5rem;
+    }
+    section#home::before { display: none; }
   </style>
 </head>
 <body class="lang-de">
@@ -233,6 +288,8 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
+  <div class="hero-orb o1"></div>
+  <div class="hero-orb o2"></div>
   <div class="hero-inner">
     <div class="hero-badge" data-lang="de">👋 Willkommen auf meiner Seite</div>
     <div class="hero-badge" data-lang="en">👋 Welcome to my page</div>
@@ -275,6 +332,29 @@
     <p class="about-text" data-lang="en">
       I'm rooted in the <strong>media industry</strong> — starting in film post-production (Bavaria Film) and working in TV advertising for over 20 years. Outside of work, I've dived deep into <strong>AI tools, home automation and audio production</strong>. I love building things: from small scripts that simplify daily life to more complex automations around my home server.
     </p>
+
+    <div class="stats-strip reveal">
+      <div class="stat-box">
+        <span class="stat-num">20+</span>
+        <span class="stat-label" data-lang="de">Jahre Medienbranche</span>
+        <span class="stat-label" data-lang="en">Years in media</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">24/7</span>
+        <span class="stat-label" data-lang="de">Home-Server-Betrieb</span>
+        <span class="stat-label" data-lang="en">Home server uptime</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">6+</span>
+        <span class="stat-label" data-lang="de">Eigene Projekte</span>
+        <span class="stat-label" data-lang="en">Personal projects</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">DE/EN</span>
+        <span class="stat-label" data-lang="de">Zweisprachig</span>
+        <span class="stat-label" data-lang="en">Bilingual</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -291,11 +371,23 @@
     <div class="projects-grid">
 
       <!-- TyrannoFi -->
-      <div class="project-card featured">
+      <div class="project-card featured reveal">
         <img src="tyrannofi-logo.svg" alt="TyrannoFi Logo" style="height:48px;margin-bottom:0.75rem;display:block;">
         <h3>TyrannoFi</h3>
         <p data-lang="de">KI-gestützter E-Mail-Scanner und Organizer — analysiert eingehende Mails, filtert, kategorisiert und reagiert nach definierten Regeln. Läuft 24/7 auf meinem Home-Server.</p>
         <p data-lang="en">AI-powered email scanner and organizer — analyses incoming mails, filters, categorizes and responds based on custom rules. Runs 24/7 on my home server.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Automatische Klassifizierung nach Absenderdomain und Inhalt</li>
+          <li>Konfigurierbare Regeln für Filtern, Verschieben und Beantworten</li>
+          <li>Läuft dauerhaft als Systemd-Dienst auf einem Raspberry Pi 5</li>
+          <li>Eigene Android-App (Flutter) zur mobilen Steuerung</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Automatic classification by sender domain and content</li>
+          <li>Configurable rules for filtering, moving and replying</li>
+          <li>Runs permanently as a systemd service on a Raspberry Pi 5</li>
+          <li>Companion Android app (Flutter) for mobile control</li>
+        </ul>
         <div class="project-tags">
           <span class="project-tag">Python</span>
           <span class="project-tag">AI / LLM</span>
@@ -309,11 +401,23 @@
       </div>
 
       <!-- Home Lab -->
-      <div class="project-card">
+      <div class="project-card reveal">
         <span class="project-icon">🖥️</span>
         <h3>Home Lab & Automation</h3>
         <p data-lang="de">Raspberry Pi 5 als NAS, Medienserver und Automatisierungs-Hub. Eigenes Netzwerk-Monitoring, Wake-on-LAN, automatische Backups und KI-gestützte Cronjobs.</p>
         <p data-lang="en">Raspberry Pi 5 as NAS, media server and automation hub. Custom network monitoring, Wake-on-LAN, automated backups and AI-driven cron jobs.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Zentrale NAS mit Samba-Freigaben für das gesamte Heimnetz</li>
+          <li>Verifizierte, tägliche Backups inkl. Hash-Prüfung auf zweitem Speicherort</li>
+          <li>Wake-on-LAN & Fernsteuerung für mehrere PCs im Haushalt</li>
+          <li>Temperatur- und Ressourcen-Monitoring mit automatischen Watchdogs</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Central NAS with Samba shares for the whole home network</li>
+          <li>Verified daily backups incl. hash-checking to a secondary location</li>
+          <li>Wake-on-LAN & remote control for multiple household PCs</li>
+          <li>Temperature and resource monitoring with automated watchdogs</li>
+        </ul>
         <div class="project-tags">
           <span class="project-tag">Raspberry Pi</span>
           <span class="project-tag">Linux</span>
@@ -323,12 +427,24 @@
       </div>
 
       <!-- KI Assistent -->
-      <div class="project-card">
+      <div class="project-card reveal">
         <span class="project-icon">🤖</span>
         <h3 data-lang="de">KI-Persönlicher Assistent</h3>
         <h3 data-lang="en">AI Personal Assistant</h3>
         <p data-lang="de">Persönlicher KI-Assistent auf Basis von OpenClaw + Claude AI — läuft 24/7 auf meinem Home-Server. Tägliches Briefing (Wetter, News, Crypto, Kalender), Telegram-Integration, Kamera-Snapshots, Sprachausgabe und vollautomatische Cron-Aufgaben.</p>
         <p data-lang="en">Personal AI assistant built on OpenClaw + Claude AI — running 24/7 on my home server. Daily briefing (weather, news, crypto, calendar), Telegram integration, camera snapshots, text-to-speech and fully automated cron tasks.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Persistentes Langzeitgedächtnis über strukturierte Notizdateien</li>
+          <li>Proaktive Alerts (Sicherheit, Temperatur, Termine) statt reinem Q&A</li>
+          <li>Steuerung mehrerer Rechner & Geräte im Haushalt per Fernzugriff</li>
+          <li>Eigene tägliche Briefings mit Wetter-, News- und Kalenderdaten</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Persistent long-term memory via structured note files</li>
+          <li>Proactive alerts (security, temperature, calendar) beyond plain Q&A</li>
+          <li>Remote control of multiple household computers & devices</li>
+          <li>Custom daily briefings with weather, news and calendar data</li>
+        </ul>
         <div class="project-tags">
           <span class="project-tag">OpenClaw</span>
           <span class="project-tag">Claude AI</span>
@@ -339,11 +455,21 @@
       </div>
 
       <!-- Excel Automation -->
-      <div class="project-card">
+      <div class="project-card reveal">
         <span class="project-icon">📊</span>
         <h3>Excel Automation</h3>
         <p data-lang="de">VBA-Makros zur automatischen Verarbeitung von Mediadaten — z.B. Aufteilen kombinierter Spalten (LP/Sek), Euro-Formatierung, Batch-Verarbeitung beliebiger Dateien.</p>
         <p data-lang="en">VBA macros for automatic processing of media data — e.g. splitting combined columns (LP/Sec), Euro formatting, batch processing of any similarly structured file.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Spart mehrere Stunden manuelle Aufbereitung pro Woche</li>
+          <li>Robust gegenüber wechselnden Spaltenformaten der Quelldaten</li>
+          <li>Batch-fähig für beliebig viele Dateien in einem Durchlauf</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Saves several hours of manual prep work per week</li>
+          <li>Robust against varying source column formats</li>
+          <li>Batch-capable for any number of files in one run</li>
+        </ul>
         <div class="project-tags">
           <span class="project-tag">VBA</span>
           <span class="project-tag">Excel</span>
@@ -353,11 +479,21 @@
       </div>
 
       <!-- Audio Production -->
-      <div class="project-card">
+      <div class="project-card reveal">
         <span class="project-icon">🎵</span>
         <h3>Audio Production</h3>
         <p data-lang="de">Musik- und Audioproduktion mit Ableton Live. Früher Live-Produktion und Moderation bei einem Webradio-Sender (2003–2004) — von der Aufnahme bis zum Sendebetrieb.</p>
         <p data-lang="en">Music and audio production with Ableton Live. Former live production and on-air hosting at a web radio station (2003–2004) — from recording to broadcast.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Eigene Produktionen in Ableton Live, inkl. Mixing & Mastering</li>
+          <li>Live-Sendebetrieb bei einem Webradio: Technik, Moderation, Ablauf</li>
+          <li>Automatisierte Backup-Pipeline für Projektdateien</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Own productions in Ableton Live, incl. mixing & mastering</li>
+          <li>Live web-radio broadcasting: technical setup, hosting, show flow</li>
+          <li>Automated backup pipeline for project files</li>
+        </ul>
         <div class="project-tags">
           <span class="project-tag">Ableton Live</span>
           <span class="project-tag">DAW</span>
@@ -367,12 +503,24 @@
       </div>
 
       <!-- Security / Monitoring -->
-      <div class="project-card">
+      <div class="project-card reveal">
         <span class="project-icon">🔐</span>
         <h3 data-lang="de">Netzwerk-Monitoring</h3>
         <h3 data-lang="en">Network Monitoring</h3>
         <p data-lang="de">Suricata IDS, Kamera-Integration (Tapo RTSP), automatische Sicherheits-Alerts per Telegram. Überwachung des Heimnetzwerks mit eigenen Skripten.</p>
         <p data-lang="en">Suricata IDS, camera integration (Tapo RTSP), automatic security alerts via Telegram. Home network monitoring with custom scripts.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Echtzeit-Intrusion-Detection mit Suricata und Regel-Updates</li>
+          <li>RTSP-Kamera-Snapshots auf Zuruf oder Alarm</li>
+          <li>Sofortige Telegram-Benachrichtigung bei High-Priority-Events</li>
+          <li>DNS-basiertes Werbe-/Tracker-Blocking im gesamten Heimnetz</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Real-time intrusion detection with Suricata and rule updates</li>
+          <li>On-demand or alert-triggered RTSP camera snapshots</li>
+          <li>Instant Telegram alerts on high-priority events</li>
+          <li>DNS-based ad/tracker blocking across the whole home network</li>
+        </ul>
         <div class="project-tags">
           <span class="project-tag">Suricata</span>
           <span class="project-tag">RTSP</span>
@@ -395,7 +543,7 @@
     <p class="section-desc" data-lang="en">Technologies and areas I work with regularly.</p>
 
     <div class="skills-grid">
-      <div class="skill-group">
+      <div class="skill-group reveal">
         <h4>AI & Automation</h4>
         <ul>
           <li>Claude AI / LLMs</li>
@@ -404,7 +552,7 @@
           <li>Workflow Automation</li>
         </ul>
       </div>
-      <div class="skill-group">
+      <div class="skill-group reveal">
         <h4 data-lang="de">Scripting & Tools</h4>
         <h4 data-lang="en">Scripting & Tools</h4>
         <ul>
@@ -414,7 +562,7 @@
           <li>Git</li>
         </ul>
       </div>
-      <div class="skill-group">
+      <div class="skill-group reveal">
         <h4 data-lang="de">Infrastruktur</h4>
         <h4 data-lang="en">Infrastructure</h4>
         <ul>
@@ -424,7 +572,7 @@
           <li>SSH / WoL</li>
         </ul>
       </div>
-      <div class="skill-group">
+      <div class="skill-group reveal">
         <h4>Media & Audio</h4>
         <ul>
           <li>Ableton Live</li>
@@ -476,6 +624,17 @@
     const isInline = window.getComputedStyle(el).display === 'inline';
     if (isInline) el.classList.add('inline');
   });
+
+  // Scroll reveal
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 </script>
 </body>
 </html>
