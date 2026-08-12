@@ -241,8 +241,8 @@
     .music-progress::-moz-range-track { height: 4px; border-radius: 2px; background: var(--bg3); }
     .music-hint { font-size: 0.8rem; color: var(--muted); margin: 0 0 1.25rem; text-align: center; }
     .music-hint.play-hint { color: #ffffff; font-weight: 600; }
-    .music-hint.unicorn-hint { color: #ffffff; font-weight: 600; animation: hintBlink 1.4s ease-in-out infinite; }
-    @keyframes hintBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+    .music-hint.unicorn-hint { font-weight: 600; animation: hintBlink 0.6s step-end infinite; }
+    @keyframes hintBlink { 0%, 100% { color: #ffffff; } 50% { color: #ff2fb0; } }
 
     /* HIDDEN UNICORN EASTER EGG */
     .hidden-unicorn {
