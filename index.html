@@ -1181,50 +1181,65 @@
     // Runs fully independently of the single-creature find animation: its own
     // elements, its own timers, explicitly centered on the currently visible viewport.
     function playBonusCombo() {
+      // Hide/reset the single-creature hunt entirely so its animation can't overlap
+      unicorn.classList.remove('found', 'running');
+      unicorn.style.display = 'none';
+      toast.classList.remove('show');
+
       const centerY = Math.round(window.innerHeight / 2); // middle of the CURRENTLY VISIBLE area
+      const halfGap = 90; // px each creature stops from dead-center
 
       const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed !important; inset:0; z-index:999999; pointer-events:none;';
+      overlay.style.cssText = 'position:fixed; inset:0; z-index:2147483647; pointer-events:none;';
       document.body.appendChild(overlay);
 
       const left = document.createElement('span');
-      left.className = 'bonus-runner face-toward'; // mirrored so it faces right, toward the tyranno
       left.textContent = '🦄';
-      left.style.cssText = 'position:fixed !important; top:' + centerY + 'px; left:-15vw; z-index:999999;';
+      left.style.cssText = 'position:fixed; top:' + centerY + 'px; left:0; font-size:2.2rem; ' +
+        'transform:translateY(-50%) scaleX(-1) translateX(-20vw); will-change:transform;';
       const right = document.createElement('span');
-      right.className = 'bonus-runner'; // faces left by default, toward the unicorn
       right.textContent = '🦖';
-      right.style.cssText = 'position:fixed !important; top:' + centerY + 'px; right:-15vw; z-index:999999;';
+      right.style.cssText = 'position:fixed; top:' + centerY + 'px; right:0; font-size:2.2rem; ' +
+        'transform:translateY(-50%) translateX(20vw); will-change:transform;';
       overlay.appendChild(left);
       overlay.appendChild(right);
 
-      // Force a synchronous reflow (more reliable across mobile browsers than double rAF),
-      // then animate both toward the center, facing each other.
-      void left.offsetWidth;
-      void right.offsetWidth;
-      setTimeout(() => {
-        left.style.left = 'calc(50% - 90px)';
-        right.style.right = 'calc(50% - 90px)';
-      }, 30);
+      // Manual rAF-driven animation (no CSS-transition edge cases) — both run toward the center.
+      const startX = window.innerWidth / 2 - halfGap; // px each one travels
+      const duration = 2200;
+      const t0 = performance.now();
+      function step(now) {
+        const p = Math.min(1, (now - t0) / duration);
+        const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+        const dist = startX * eased;
+        left.style.transform = 'translateY(-50%) scaleX(-1) translateX(' + dist + 'px)';
+        right.style.transform = 'translateY(-50%) translateX(-' + dist + 'px)';
+        if (p < 1) {
+          requestAnimationFrame(step);
+        } else {
+          playHeartChime();
 
-      setTimeout(() => {
-        playHeartChime();
+          const shock = document.createElement('div');
+          shock.className = 'bonus-shock';
+          shock.style.top = centerY + 'px';
+          overlay.appendChild(shock);
 
-        const shock = document.createElement('div');
-        shock.className = 'bonus-shock';
-        shock.style.top = centerY + 'px';
-        overlay.appendChild(shock);
+          const heart = document.createElement('div');
+          heart.className = 'bonus-heart';
+          heart.style.top = centerY + 'px';
+          heart.textContent = '💖';
+          overlay.appendChild(heart);
 
-        const heart = document.createElement('div');
-        heart.className = 'bonus-heart';
-        heart.style.top = centerY + 'px';
-        heart.textContent = '💖';
-        overlay.appendChild(heart);
-
-        left.remove();
-        right.remove();
-        setTimeout(() => overlay.remove(), 1300);
-      }, 2650);
+          left.remove();
+          right.remove();
+          setTimeout(() => {
+            overlay.remove();
+            unicorn.style.display = ''; // resume the normal hunt
+            placeUnicorn(true);
+          }, 1300);
+        }
+      }
+      requestAnimationFrame(step);
     }
 
     unicorn.addEventListener('click', () => {
