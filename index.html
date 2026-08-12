@@ -853,14 +853,20 @@
     analyser.connect(audioCtx.destination);
   }
 
+  let pulseSmoothed = 0;
   function pulseLoop() {
     analyser.getByteFrequencyData(dataArray);
+    // Focus on the bass/low-mid range (punchier, more "beat"-like) instead of the full spectrum average
+    const bassBins = Math.max(1, Math.floor(dataArray.length * 0.35));
     let sum = 0;
-    for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-    const avg = sum / dataArray.length / 255; // 0..1
-    const level = Math.min(1, avg * 1.6);
-    heroPulse.style.opacity = (level * 0.55).toFixed(3);
-    heroPulse.style.transform = 'scale(' + (1 + level * 0.18).toFixed(3) + ')';
+    for (let i = 0; i < bassBins; i++) sum += dataArray[i];
+    const avg = sum / bassBins / 255; // 0..1
+    const raw = Math.min(1, avg * 3.2);
+    // Fast attack, slower decay so it stays punchy but doesn't flicker
+    pulseSmoothed = raw > pulseSmoothed ? raw : pulseSmoothed * 0.85 + raw * 0.15;
+    const level = pulseSmoothed;
+    heroPulse.style.opacity = (0.1 + level * 0.85).toFixed(3);
+    heroPulse.style.transform = 'scale(' + (1 + level * 0.45).toFixed(3) + ')';
     pulseRAF = requestAnimationFrame(pulseLoop);
   }
 
