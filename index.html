@@ -289,6 +289,12 @@
     }
     .hero-orb.o1 { width: 320px; height: 320px; background: var(--accent); top: 10%; left: 8%; animation: float1 14s ease-in-out infinite; }
     .hero-orb.o2 { width: 260px; height: 260px; background: var(--accent2); bottom: 5%; right: 10%; animation: float2 18s ease-in-out infinite; }
+    .hero-pulse {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at 50% 45%, var(--accent) 0%, transparent 65%);
+      opacity: 0; transform: scale(1);
+      transition: opacity 0.09s linear, transform 0.09s linear;
+    }
     .hero-inner { position: relative; z-index: 1; }
     @keyframes float1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,-20px); } }
     @keyframes float2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-25px,25px); } }
@@ -364,6 +370,7 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
+  <div class="hero-pulse" id="heroPulse"></div>
   <div class="hero-orb o1"></div>
   <div class="hero-orb o2"></div>
   <div class="hero-inner">
@@ -825,18 +832,58 @@
     if (autoplay) {
       bgAudio.play();
       musicIcon.innerHTML = pauseIcon;
+      startPulse();
     } else {
       musicIcon.innerHTML = playIcon;
     }
+  }
+
+  // Audio-reactive background pulse (Web Audio API)
+  let audioCtx, analyser, dataArray, sourceNode, pulseRAF;
+  const heroPulse = document.getElementById('heroPulse');
+
+  function ensureAudioGraph() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    sourceNode = audioCtx.createMediaElementSource(bgAudio);
+    sourceNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  }
+
+  function pulseLoop() {
+    analyser.getByteFrequencyData(dataArray);
+    let sum = 0;
+    for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+    const avg = sum / dataArray.length / 255; // 0..1
+    const level = Math.min(1, avg * 1.6);
+    heroPulse.style.opacity = (level * 0.55).toFixed(3);
+    heroPulse.style.transform = 'scale(' + (1 + level * 0.18).toFixed(3) + ')';
+    pulseRAF = requestAnimationFrame(pulseLoop);
+  }
+
+  function startPulse() {
+    ensureAudioGraph();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (!pulseRAF) pulseLoop();
+  }
+  function stopPulse() {
+    if (pulseRAF) { cancelAnimationFrame(pulseRAF); pulseRAF = null; }
+    heroPulse.style.opacity = 0;
+    heroPulse.style.transform = 'scale(1)';
   }
 
   musicToggle.addEventListener('click', () => {
     if (bgAudio.paused) {
       bgAudio.play();
       musicIcon.innerHTML = pauseIcon;
+      startPulse();
     } else {
       bgAudio.pause();
       musicIcon.innerHTML = playIcon;
+      stopPulse();
     }
   });
   musicPrev.addEventListener('click', () => loadTrack(trackIndex - 1, true));
