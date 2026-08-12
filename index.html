@@ -1190,13 +1190,14 @@
       document.body.appendChild(left);
       document.body.appendChild(right);
 
-      // Force layout, then animate both toward the center, facing each other
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          left.style.left = 'calc(50% - 90px)';
-          right.style.right = 'calc(50% - 90px)';
-        });
-      });
+      // Force a synchronous reflow (more reliable across mobile browsers than double rAF),
+      // then animate both toward the center, facing each other.
+      void left.offsetWidth;
+      void right.offsetWidth;
+      setTimeout(() => {
+        left.style.left = 'calc(50% - 90px)';
+        right.style.right = 'calc(50% - 90px)';
+      }, 30);
 
       setTimeout(() => {
         left.remove();
