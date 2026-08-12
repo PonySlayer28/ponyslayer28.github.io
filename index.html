@@ -209,10 +209,10 @@
 
     /* MUSIC PLAYER */
     .music-player {
-      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 90;
+      position: fixed; top: 4.5rem; left: 50%; transform: translateX(-50%); z-index: 90;
       background: var(--card); border: 1px solid var(--border);
       border-radius: 40px; padding: 0.6rem 1.1rem 0.6rem 0.6rem;
-      display: flex; align-items: center; gap: 0.65rem;
+      display: flex; align-items: center; gap: 0.6rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       backdrop-filter: blur(8px);
     }
@@ -225,7 +225,16 @@
     }
     .music-btn:hover { transform: scale(1.08); }
     .music-btn svg { width: 16px; height: 16px; fill: #1a1008; }
-    .music-label { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+    .music-nav-btn {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bg3); border: 1px solid var(--border); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.15s;
+    }
+    .music-nav-btn:hover { border-color: var(--accent); }
+    .music-nav-btn svg { width: 12px; height: 12px; fill: var(--muted); }
+    .music-nav-btn:hover svg { fill: var(--accent); }
+    .music-label { font-size: 0.78rem; color: var(--muted); line-height: 1.3; min-width: 90px; }
     .music-label strong { color: var(--text); display: block; font-size: 0.82rem; }
     .music-volume-btn {
       background: none; border: none; cursor: pointer; padding: 0.2rem;
@@ -241,9 +250,9 @@
     }
     .music-player.vol-open .music-volume { width: 70px; opacity: 1; }
     @media (max-width: 600px) {
-      .music-player { bottom: 1rem; right: 1rem; padding: 0.5rem 0.9rem 0.5rem 0.5rem; }
+      .music-player { top: 4rem; padding: 0.5rem 0.8rem 0.5rem 0.5rem; gap: 0.4rem; }
       .music-label { display: none; }
-      .music-player.vol-open .music-volume { width: 50px; }
+      .music-player.vol-open .music-volume { width: 45px; }
     }
 
     /* HERO GLOW ORBS */
@@ -712,19 +721,24 @@
 
 <!-- MUSIC PLAYER -->
 <div class="music-player">
+  <button class="music-nav-btn" id="musicPrev" aria-label="Vorheriger Track">
+    <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+  </button>
   <button class="music-btn" id="musicToggle" aria-label="Play/Pause">
     <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
   </button>
+  <button class="music-nav-btn" id="musicNext" aria-label="Nächster Track">
+    <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+  </button>
   <div class="music-label">
-    <strong>80 Theme</strong>
-    <span data-lang="de" class="inline">Eigene Produktion</span>
-    <span data-lang="en" class="inline">Original track</span>
+    <strong id="musicTitle">80 Theme</strong>
+    <span id="musicSubtitle">1 / 4</span>
   </div>
   <input type="range" class="music-volume" id="musicVolume" min="0" max="1" step="0.01" value="0.7" aria-label="Lautstärke">
   <button class="music-volume-btn" id="musicVolumeToggle" aria-label="Lautstärke anzeigen">
     <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
   </button>
-  <audio id="bgAudio" src="80-theme.mp3" loop preload="none"></audio>
+  <audio id="bgAudio" src="80-theme.mp3" preload="none"></audio>
 </div>
 
 <script>
@@ -745,11 +759,37 @@
   });
 
   // Music player
+  const playlist = [
+    { title: '80 Theme', file: '80-theme.mp3' },
+    { title: 'AAA5', file: 'AAA5.mp3' },
+    { title: 'AAA6', file: 'AAA6.mp3' },
+    { title: 'AAA7', file: 'AAA7.mp3' }
+  ];
+  let trackIndex = 0;
   const bgAudio = document.getElementById('bgAudio');
   const musicToggle = document.getElementById('musicToggle');
   const musicIcon = document.getElementById('musicIcon');
+  const musicTitle = document.getElementById('musicTitle');
+  const musicSubtitle = document.getElementById('musicSubtitle');
+  const musicPrev = document.getElementById('musicPrev');
+  const musicNext = document.getElementById('musicNext');
   const playIcon = '<path d="M8 5v14l11-7z"/>';
   const pauseIcon = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+
+  function loadTrack(index, autoplay) {
+    trackIndex = (index + playlist.length) % playlist.length;
+    const track = playlist[trackIndex];
+    bgAudio.src = track.file;
+    musicTitle.textContent = track.title;
+    musicSubtitle.textContent = (trackIndex + 1) + ' / ' + playlist.length;
+    if (autoplay) {
+      bgAudio.play();
+      musicIcon.innerHTML = pauseIcon;
+    } else {
+      musicIcon.innerHTML = playIcon;
+    }
+  }
+
   musicToggle.addEventListener('click', () => {
     if (bgAudio.paused) {
       bgAudio.play();
@@ -759,7 +799,9 @@
       musicIcon.innerHTML = playIcon;
     }
   });
-  bgAudio.addEventListener('ended', () => { musicIcon.innerHTML = playIcon; });
+  musicPrev.addEventListener('click', () => loadTrack(trackIndex - 1, true));
+  musicNext.addEventListener('click', () => loadTrack(trackIndex + 1, true));
+  bgAudio.addEventListener('ended', () => loadTrack(trackIndex + 1, true));
 
   // Volume control
   const musicPlayer = document.querySelector('.music-player');
