@@ -210,13 +210,14 @@
 
     /* MUSIC PLAYER */
     .music-player {
-      position: fixed; top: 4.5rem; left: 50%; transform: translateX(-50%); z-index: 90;
+      position: relative; z-index: 2; margin: 0 auto 1.75rem;
       background: var(--card); border: 1px solid var(--border);
       border-radius: 40px; padding: 0.6rem 1.1rem 0.6rem 0.6rem;
       display: flex; align-items: center; gap: 0.6rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       backdrop-filter: blur(8px);
       max-width: calc(100vw - 1.5rem);
+      width: fit-content;
       box-sizing: border-box;
     }
     .music-btn {
@@ -253,14 +254,11 @@
     }
     .music-player.vol-open .music-volume { width: 70px; opacity: 1; }
     @media (max-width: 600px) {
-      .music-player { top: 6.2rem; padding: 0.4rem 0.7rem 0.4rem 0.4rem; gap: 0.3rem; }
+      .music-player { padding: 0.4rem 0.7rem 0.4rem 0.4rem; gap: 0.3rem; }
       .music-label { display: none; }
       .music-nav-btn { width: 22px; height: 22px; }
       .music-btn { width: 32px; height: 32px; }
       .music-player.vol-open .music-volume { width: 40px; }
-    }
-    @media (max-width: 360px) {
-      .music-player { top: 7.5rem; }
     }
 
     /* HERO GLOW ORBS */
@@ -347,6 +345,28 @@
   <div class="hero-orb o1"></div>
   <div class="hero-orb o2"></div>
   <div class="hero-inner">
+    <!-- MUSIC PLAYER -->
+    <div class="music-player">
+      <button class="music-nav-btn" id="musicPrev" aria-label="Vorheriger Track">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="music-btn" id="musicToggle" aria-label="Play/Pause">
+        <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="music-nav-btn" id="musicNext" aria-label="Nächster Track">
+        <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+      </button>
+      <div class="music-label">
+        <strong id="musicTitle">80 Theme</strong>
+        <span id="musicSubtitle">1 / 4</span>
+      </div>
+      <input type="range" class="music-volume" id="musicVolume" min="0" max="1" step="0.01" value="0.7" aria-label="Lautstärke">
+      <button class="music-volume-btn" id="musicVolumeToggle" aria-label="Lautstärke anzeigen">
+        <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+      </button>
+      <audio id="bgAudio" src="80-theme.mp3" preload="none"></audio>
+    </div>
+
     <div class="hero-badge" data-lang="de">👋 Willkommen auf meiner Seite</div>
     <div class="hero-badge" data-lang="en">👋 Welcome to my page</div>
 
@@ -726,28 +746,6 @@
 <footer>
   <p>© 2026 Ponyslayer · München · <a href="https://github.com/PonySlayer28" target="_blank" style="color:var(--accent);text-decoration:none;">GitHub</a></p>
 </footer>
-
-<!-- MUSIC PLAYER -->
-<div class="music-player">
-  <button class="music-nav-btn" id="musicPrev" aria-label="Vorheriger Track">
-    <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-  </button>
-  <button class="music-btn" id="musicToggle" aria-label="Play/Pause">
-    <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-  </button>
-  <button class="music-nav-btn" id="musicNext" aria-label="Nächster Track">
-    <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
-  </button>
-  <div class="music-label">
-    <strong id="musicTitle">80 Theme</strong>
-    <span id="musicSubtitle">1 / 4</span>
-  </div>
-  <input type="range" class="music-volume" id="musicVolume" min="0" max="1" step="0.01" value="0.7" aria-label="Lautstärke">
-  <button class="music-volume-btn" id="musicVolumeToggle" aria-label="Lautstärke anzeigen">
-    <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-  </button>
-  <audio id="bgAudio" src="80-theme.mp3" preload="none"></audio>
-</div>
 
 <script>
   function toggleLang() {
