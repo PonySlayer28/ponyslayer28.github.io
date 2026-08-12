@@ -406,6 +406,7 @@
       font-family: 'Cinzel', Georgia, serif; font-size: 1.6rem;
       font-weight: 700; color: var(--accent); display: block;
     }
+    .stat-counter { display: inline-block; }
     .stat-box .stat-label {
       font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem;
       text-transform: uppercase; letter-spacing: 0.05em;
@@ -540,7 +541,7 @@
         <span class="stat-label" data-lang="en">Home server uptime</span>
       </div>
       <div class="stat-box">
-        <span class="stat-num">6+</span>
+        <span class="stat-num stat-counter" id="projectCounter" data-target="100">0+</span>
         <span class="stat-label" data-lang="de">Eigene Projekte</span>
         <span class="stat-label" data-lang="en">Personal projects</span>
       </div>
@@ -1042,6 +1043,42 @@
     });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Spinning stat counter — random flicker that settles on the target number
+  const counterEl = document.getElementById('projectCounter');
+  if (counterEl) {
+    const target = parseInt(counterEl.dataset.target, 10);
+    let spun = false;
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !spun) {
+          spun = true;
+          const duration = 1800;
+          const t0 = performance.now();
+          function tick(now) {
+            const p = Math.min(1, (now - t0) / duration);
+            if (p < 1) {
+              // First 70% of the time: rapid random digits (spin feel).
+              // Last 30%: ease into the real count-up toward target.
+              if (p < 0.7) {
+                counterEl.textContent = Math.floor(Math.random() * (target * 2)) + '+';
+              } else {
+                const localP = (p - 0.7) / 0.3;
+                const eased = 1 - Math.pow(1 - localP, 3);
+                counterEl.textContent = Math.floor(target * eased) + '+';
+              }
+              requestAnimationFrame(tick);
+            } else {
+              counterEl.textContent = target + '+';
+            }
+          }
+          requestAnimationFrame(tick);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    counterObserver.observe(counterEl);
+  }
 
   // Hidden creature easter egg (unicorn or Tyranno, alternating per visit) — only appears after Play is pressed
   window.revealUnicornGame = function () {};
