@@ -288,7 +288,10 @@
     .bonus-runner {
       position: fixed; top: 50%; z-index: 210; font-size: 2.2rem;
       transform: translateY(-50%); pointer-events: none;
-      transition: left 1.3s cubic-bezier(.45,0,.55,1), right 1.3s cubic-bezier(.45,0,.55,1), opacity 0.25s;
+      transition: left 2.6s cubic-bezier(.45,0,.55,1), right 2.6s cubic-bezier(.45,0,.55,1), opacity 0.25s;
+    }
+    .bonus-runner.face-toward {
+      transform: translateY(-50%) scaleX(-1);
     }
     .bonus-heart {
       position: fixed; top: 50%; left: 50%; z-index: 211; pointer-events: none;
@@ -1177,17 +1180,17 @@
 
     function playBonusCombo() {
       const left = document.createElement('span');
-      left.className = 'bonus-runner';
+      left.className = 'bonus-runner face-toward'; // mirrored so it faces right, toward the tyranno
       left.textContent = '🦄';
       left.style.left = '-10vw';
       const right = document.createElement('span');
-      right.className = 'bonus-runner';
+      right.className = 'bonus-runner'; // faces left by default, toward the unicorn
       right.textContent = '🦖';
       right.style.right = '-10vw';
       document.body.appendChild(left);
       document.body.appendChild(right);
 
-      // Force layout, then animate both toward the center
+      // Force layout, then animate both toward the center, facing each other
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           left.style.left = 'calc(50% - 90px)';
@@ -1210,7 +1213,7 @@
         heart.textContent = '💖';
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 1200);
-      }, 1350);
+      }, 2650);
     }
 
     unicorn.addEventListener('click', () => {
