@@ -255,6 +255,11 @@
       transform: scale(3.2) rotate(360deg);
       transition: transform 0.6s cubic-bezier(.34,1.56,.64,1), opacity 0.3s, filter 0.4s;
     }
+    .hidden-unicorn.running {
+      transform: scale(2) translateX(-140vw) rotate(-15deg);
+      opacity: 0;
+      transition: transform 0.9s cubic-bezier(.55,0,.85,.35), opacity 0.9s ease-in 0.2s;
+    }
     .unicorn-toast {
       position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px) scale(0.8);
       background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 1px solid var(--accent2);
@@ -1035,7 +1040,7 @@
       const left = 4 + Math.random() * 88; // 4%..92% of width
       unicorn.style.top = top + 'px';
       unicorn.style.left = left + 'vw';
-      unicorn.classList.remove('found');
+      unicorn.classList.remove('found', 'running');
     }
 
     window.revealUnicornGame = function () {
@@ -1047,8 +1052,33 @@
       placeUnicorn();
     };
 
+    // Cute synthesized "found" chime (no audio file needed)
+    function playFoundChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6 - happy little arpeggio
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          const start = ctx.currentTime + i * 0.09;
+          gain.gain.setValueAtTime(0, start);
+          gain.gain.linearRampToValueAtTime(0.18, start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.3);
+        });
+        setTimeout(() => ctx.close(), 900);
+      } catch (e) { /* audio not available, ignore */ }
+    }
+
     unicorn.addEventListener('click', () => {
+      unicorn.classList.remove('running');
       unicorn.classList.add('found');
+      playFoundChime();
 
       // Reward burst at the unicorn's spot
       const burst = document.createElement('div');
@@ -1060,7 +1090,10 @@
 
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2200);
-      setTimeout(() => placeUnicorn(true), 2400);
+
+      // After the pop, it runs off toward the edge it's facing (left)
+      setTimeout(() => unicorn.classList.add('running'), 550);
+      setTimeout(() => placeUnicorn(true), 1650);
     });
   })();
 </script>
