@@ -311,6 +311,7 @@
       position: absolute; inset: 0; pointer-events: none; z-index: 0;
       background: radial-gradient(ellipse at 50% 45%, var(--accent) 0%, transparent 65%);
       opacity: 0; transform: scale(1);
+      mix-blend-mode: screen;
       transition: opacity 0.09s linear, transform 0.09s linear;
     }
     .hero-inner { position: relative; z-index: 1; }
@@ -889,8 +890,8 @@
     // Fast attack, slower decay so it stays punchy but doesn't flicker
     pulseSmoothed = raw > pulseSmoothed ? raw : pulseSmoothed * 0.85 + raw * 0.15;
     const level = pulseSmoothed;
-    heroPulse.style.opacity = (0.1 + level * 0.85).toFixed(3);
-    heroPulse.style.transform = 'scale(' + (1 + level * 0.45).toFixed(3) + ')';
+    heroPulse.style.opacity = (0.08 + level * 0.42).toFixed(3);
+    heroPulse.style.transform = 'scale(' + (1 + level * 0.35).toFixed(3) + ')';
     pulseRAF = requestAnimationFrame(pulseLoop);
   }
 
