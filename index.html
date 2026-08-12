@@ -421,8 +421,8 @@
     </div>
     <p class="music-hint" data-lang="de">Einfach auf Play drücken, genießen und lesen 🎧</p>
     <p class="music-hint" data-lang="en">Just hit play, sit back and read 🎧</p>
-    <p class="music-hint" data-lang="de">🦄 finde das Einhorn</p>
-    <p class="music-hint" data-lang="en">🦄 find the unicorn</p>
+    <p class="music-hint unicorn-hint" id="unicornHintDe" data-lang="de" style="display:none">🦄 finde das Einhorn</p>
+    <p class="music-hint unicorn-hint" id="unicornHintEn" data-lang="en" style="display:none">🦄 find the unicorn</p>
 
     <div class="hero-badge" data-lang="de">👋 Willkommen auf meiner Seite</div>
     <div class="hero-badge" data-lang="en">👋 Welcome to my page</div>
@@ -804,7 +804,7 @@
   <p>© 2026 Ponyslayer · München · <a href="https://github.com/PonySlayer28" target="_blank" style="color:var(--accent);text-decoration:none;">GitHub</a></p>
 </footer>
 
-<span class="hidden-unicorn" id="hiddenUnicorn">🦄</span>
+<span class="hidden-unicorn" id="hiddenUnicorn" style="display:none">🦄</span>
 <div class="unicorn-toast" id="unicornToast">🦄 Gefunden! Gut gesucht.</div>
 
 <script>
@@ -855,6 +855,7 @@
       bgAudio.play();
       musicIcon.innerHTML = pauseIcon;
       startPulse();
+      window.revealUnicornGame();
     } else {
       musicIcon.innerHTML = playIcon;
     }
@@ -908,6 +909,7 @@
       bgAudio.play();
       musicIcon.innerHTML = pauseIcon;
       startPulse();
+      window.revealUnicornGame();
     } else {
       bgAudio.pause();
       musicIcon.innerHTML = playIcon;
@@ -979,11 +981,15 @@
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  // Hidden unicorn easter egg — random spot on every load/reload
+  // Hidden unicorn easter egg — only appears after Play is pressed
+  window.revealUnicornGame = function () {};
   (function () {
     const unicorn = document.getElementById('hiddenUnicorn');
     const toast = document.getElementById('unicornToast');
+    const hintDe = document.getElementById('unicornHintDe');
+    const hintEn = document.getElementById('unicornHintEn');
     if (!unicorn) return;
+    let revealed = false;
 
     function placeUnicorn() {
       const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
@@ -996,7 +1002,14 @@
       unicorn.classList.remove('found');
     }
 
-    placeUnicorn();
+    window.revealUnicornGame = function () {
+      if (revealed) return;
+      revealed = true;
+      hintDe.style.display = '';
+      hintEn.style.display = '';
+      unicorn.style.display = '';
+      placeUnicorn();
+    };
 
     unicorn.addEventListener('click', () => {
       unicorn.classList.add('found');
