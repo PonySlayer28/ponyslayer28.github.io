@@ -1055,12 +1055,12 @@
 
     const CREATURES = {
       unicorn: {
-        emoji: '🦄', faceRight: false,
+        emoji: '🦄', faceRight: false, isTyranno: false,
         hintDe: '🦄 finde das Einhorn', hintEn: '🦄 find the unicorn',
         toast: '🦄 Gefunden! Gut gesucht.',
       },
       tyranno: {
-        emoji: '🦖', faceRight: true,
+        emoji: '🦖', faceRight: false, isTyranno: true,
         hintDe: '🦖 finde den Tyranno', hintEn: '🦖 find the Tyranno',
         toast: '🦖 Gefunden! Grrrawr.',
       },
@@ -1248,7 +1248,7 @@
     unicorn.addEventListener('click', () => {
       unicorn.classList.remove('running');
       unicorn.classList.add('found');
-      if (creature.faceRight) playTyrannoRoar(); else playUnicornChime();
+      if (creature.isTyranno) playTyrannoRoar(); else playUnicornChime();
 
       // Reward burst at the unicorn's spot
       const burst = document.createElement('div');
