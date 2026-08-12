@@ -240,6 +240,23 @@
     }
     .music-progress::-moz-range-track { height: 4px; border-radius: 2px; background: var(--bg3); }
     .music-hint { font-size: 0.8rem; color: var(--muted); margin: 0 0 1.25rem; text-align: center; }
+
+    /* HIDDEN UNICORN EASTER EGG */
+    .hidden-unicorn {
+      position: absolute; font-size: 1.1rem; opacity: 0.55; cursor: pointer;
+      z-index: 5; user-select: none; transition: transform 0.2s, opacity 0.2s;
+      filter: grayscale(40%); line-height: 1;
+    }
+    .hidden-unicorn:hover { opacity: 1; transform: scale(1.4) rotate(-8deg); filter: grayscale(0%); }
+    .hidden-unicorn.found { opacity: 1; filter: grayscale(0%); transform: scale(1.6); }
+    .unicorn-toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--card); border: 1px solid var(--accent); color: var(--text);
+      padding: 0.7rem 1.3rem; border-radius: 30px; font-size: 0.85rem; z-index: 200;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .unicorn-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .music-btn {
       width: 38px; height: 38px; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -404,6 +421,8 @@
     </div>
     <p class="music-hint" data-lang="de">Einfach auf Play drücken, genießen und lesen 🎧</p>
     <p class="music-hint" data-lang="en">Just hit play, sit back and read 🎧</p>
+    <p class="music-hint" data-lang="de">🦄 finde das Einhorn</p>
+    <p class="music-hint" data-lang="en">🦄 find the unicorn</p>
 
     <div class="hero-badge" data-lang="de">👋 Willkommen auf meiner Seite</div>
     <div class="hero-badge" data-lang="en">👋 Welcome to my page</div>
@@ -785,6 +804,9 @@
   <p>© 2026 Ponyslayer · München · <a href="https://github.com/PonySlayer28" target="_blank" style="color:var(--accent);text-decoration:none;">GitHub</a></p>
 </footer>
 
+<span class="hidden-unicorn" id="hiddenUnicorn">🦄</span>
+<div class="unicorn-toast" id="unicornToast">🦄 Gefunden! Gut gesucht.</div>
+
 <script>
   function toggleLang() {
     const body = document.body;
@@ -956,6 +978,33 @@
     });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Hidden unicorn easter egg — random spot on every load/reload
+  (function () {
+    const unicorn = document.getElementById('hiddenUnicorn');
+    const toast = document.getElementById('unicornToast');
+    if (!unicorn) return;
+
+    function placeUnicorn() {
+      const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      const minTop = 300;             // below the hero/player area
+      const maxTop = Math.max(minTop + 200, docHeight - 250); // stay above footer
+      const top = minTop + Math.random() * (maxTop - minTop);
+      const left = 4 + Math.random() * 88; // 4%..92% of width
+      unicorn.style.top = top + 'px';
+      unicorn.style.left = left + 'vw';
+      unicorn.classList.remove('found');
+    }
+
+    placeUnicorn();
+
+    unicorn.addEventListener('click', () => {
+      unicorn.classList.add('found');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+      setTimeout(placeUnicorn, 2400);
+    });
+  })();
 </script>
 </body>
 </html>
