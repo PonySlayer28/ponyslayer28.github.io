@@ -207,6 +207,31 @@
       section { padding: 3.5rem 1rem; }
     }
 
+    /* MUSIC PLAYER */
+    .music-player {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 90;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 40px; padding: 0.6rem 1.1rem 0.6rem 0.6rem;
+      display: flex; align-items: center; gap: 0.65rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+    }
+    .music-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: transform 0.15s;
+    }
+    .music-btn:hover { transform: scale(1.08); }
+    .music-btn svg { width: 16px; height: 16px; fill: #1a1008; }
+    .music-label { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
+    .music-label strong { color: var(--text); display: block; font-size: 0.82rem; }
+    @media (max-width: 600px) {
+      .music-player { bottom: 1rem; right: 1rem; padding: 0.5rem 0.9rem 0.5rem 0.5rem; }
+      .music-label { display: none; }
+    }
+
     /* HERO GLOW ORBS */
     .hero { position: relative; overflow: hidden; }
     .hero-orb {
@@ -671,6 +696,19 @@
   <p>© 2026 Ponyslayer · München · <a href="https://github.com/PonySlayer28" target="_blank" style="color:var(--accent);text-decoration:none;">GitHub</a></p>
 </footer>
 
+<!-- MUSIC PLAYER -->
+<div class="music-player">
+  <button class="music-btn" id="musicToggle" aria-label="Play/Pause">
+    <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+  <div class="music-label">
+    <strong>80 Theme</strong>
+    <span data-lang="de" class="inline">Eigene Produktion</span>
+    <span data-lang="en" class="inline">Original track</span>
+  </div>
+  <audio id="bgAudio" src="80-theme.mp3" loop preload="none"></audio>
+</div>
+
 <script>
   function toggleLang() {
     const body = document.body;
@@ -687,6 +725,23 @@
     const isInline = window.getComputedStyle(el).display === 'inline';
     if (isInline) el.classList.add('inline');
   });
+
+  // Music player
+  const bgAudio = document.getElementById('bgAudio');
+  const musicToggle = document.getElementById('musicToggle');
+  const musicIcon = document.getElementById('musicIcon');
+  const playIcon = '<path d="M8 5v14l11-7z"/>';
+  const pauseIcon = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+  musicToggle.addEventListener('click', () => {
+    if (bgAudio.paused) {
+      bgAudio.play();
+      musicIcon.innerHTML = pauseIcon;
+    } else {
+      bgAudio.pause();
+      musicIcon.innerHTML = playIcon;
+    }
+  });
+  bgAudio.addEventListener('ended', () => { musicIcon.innerHTML = playIcon; });
 
   // Scroll reveal
   const revealObserver = new IntersectionObserver((entries) => {
