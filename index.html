@@ -260,6 +260,9 @@
       opacity: 0;
       transition: transform 0.9s cubic-bezier(.55,0,.85,.35), opacity 0.9s ease-in 0.2s;
     }
+    .hidden-unicorn.running.face-right {
+      transform: scale(2) translateX(140vw) rotate(15deg);
+    }
     .unicorn-toast {
       position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px) scale(0.8);
       background: linear-gradient(135deg, var(--accent), var(--accent2)); border: 1px solid var(--accent2);
@@ -445,8 +448,8 @@
     </div>
     <p class="music-hint play-hint" data-lang="de">Einfach auf Play drücken, genießen und lesen 🎧</p>
     <p class="music-hint play-hint" data-lang="en">Just hit play, sit back and read 🎧</p>
-    <p class="music-hint unicorn-hint" id="unicornHintDe" data-lang="de" style="display:none">🦄 finde das Einhorn</p>
-    <p class="music-hint unicorn-hint" id="unicornHintEn" data-lang="en" style="display:none">🦄 find the unicorn</p>
+    <p class="music-hint unicorn-hint" id="unicornHintDe" data-lang="de" style="display:none"></p>
+    <p class="music-hint unicorn-hint" id="unicornHintEn" data-lang="en" style="display:none"></p>
 
     <div class="hero-badge" data-lang="de">👋 Willkommen auf meiner Seite</div>
     <div class="hero-badge" data-lang="en">👋 Welcome to my page</div>
@@ -1005,7 +1008,7 @@
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-  // Hidden unicorn easter egg — only appears after Play is pressed
+  // Hidden creature easter egg (unicorn or Tyranno, alternating per visit) — only appears after Play is pressed
   window.revealUnicornGame = function () {};
   (function () {
     const unicorn = document.getElementById('hiddenUnicorn');
@@ -1014,6 +1017,25 @@
     const hintEn = document.getElementById('unicornHintEn');
     if (!unicorn) return;
     let revealed = false;
+
+    const CREATURES = {
+      unicorn: {
+        emoji: '🦄', faceRight: false,
+        hintDe: '🦄 finde das Einhorn', hintEn: '🦄 find the unicorn',
+        toast: '🦄 Gefunden! Gut gesucht.',
+      },
+      tyranno: {
+        emoji: '🦖', faceRight: true,
+        hintDe: '🦖 finde den Tyranno', hintEn: '🦖 find the Tyranno',
+        toast: '🦖 Gefunden! Grrrawr.',
+      },
+    };
+    const creature = Math.random() < 0.5 ? CREATURES.unicorn : CREATURES.tyranno;
+    unicorn.textContent = creature.emoji;
+    hintDe.textContent = creature.hintDe;
+    hintEn.textContent = creature.hintEn;
+    toast.textContent = creature.toast;
+    unicorn.classList.toggle('face-right', creature.faceRight);
 
     function placeUnicorn(avoidViewport) {
       const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
@@ -1052,8 +1074,8 @@
       placeUnicorn();
     };
 
-    // Cute synthesized "found" chime (no audio file needed)
-    function playFoundChime() {
+    // Cute synthesized "found" chime for the unicorn (no audio file needed)
+    function playUnicornChime() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6 - happy little arpeggio
@@ -1075,10 +1097,35 @@
       } catch (e) { /* audio not available, ignore */ }
     }
 
+    // Playful little "roar" for the Tyranno — a short descending growl sweep
+    function playTyrannoRoar() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        const start = ctx.currentTime;
+        osc.frequency.setValueAtTime(180, start);
+        osc.frequency.exponentialRampToValueAtTime(60, start + 0.35);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.linearRampToValueAtTime(0.22, start + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.45);
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 900;
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.5);
+        setTimeout(() => ctx.close(), 900);
+      } catch (e) { /* audio not available, ignore */ }
+    }
+
     unicorn.addEventListener('click', () => {
       unicorn.classList.remove('running');
       unicorn.classList.add('found');
-      playFoundChime();
+      if (creature.faceRight) playTyrannoRoar(); else playUnicornChime();
 
       // Reward burst at the unicorn's spot
       const burst = document.createElement('div');
