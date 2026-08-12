@@ -283,6 +283,35 @@
       70% { opacity: 0.6; }
       100% { transform: translate(-50%, -50%) scale(9); opacity: 0; }
     }
+
+    /* BONUS COMBO: unicorn + tyranno run together -> heart explosion */
+    .bonus-runner {
+      position: fixed; top: 50%; z-index: 210; font-size: 2.2rem;
+      transform: translateY(-50%); pointer-events: none;
+      transition: left 1.3s cubic-bezier(.45,0,.55,1), right 1.3s cubic-bezier(.45,0,.55,1), opacity 0.25s;
+    }
+    .bonus-heart {
+      position: fixed; top: 50%; left: 50%; z-index: 211; pointer-events: none;
+      transform: translate(-50%, -50%) scale(0); font-size: 3rem;
+      animation: bonusHeartPop 1.1s cubic-bezier(.34,1.56,.64,1) forwards;
+    }
+    @keyframes bonusHeartPop {
+      0% { transform: translate(-50%, -50%) scale(0) rotate(-20deg); opacity: 0; }
+      40% { transform: translate(-50%, -50%) scale(1.8) rotate(8deg); opacity: 1; }
+      70% { transform: translate(-50%, -50%) scale(1.3) rotate(-4deg); }
+      100% { transform: translate(-50%, -50%) scale(1.5) rotate(0deg); opacity: 0; }
+    }
+    .bonus-shock {
+      position: fixed; top: 50%; left: 50%; z-index: 209; pointer-events: none;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: radial-gradient(circle, #ffd9e8 0%, var(--accent2) 35%, var(--accent) 60%, transparent 78%);
+      transform: translate(-50%, -50%) scale(0);
+      animation: bonusShockOut 0.9s ease-out forwards;
+    }
+    @keyframes bonusShockOut {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(16); opacity: 0; }
+    }
     .music-btn {
       width: 38px; height: 38px; border-radius: 50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -1122,6 +1151,68 @@
       } catch (e) { /* audio not available, ignore */ }
     }
 
+    // Bonus combo: after 3 finds this visit, unicorn + tyranno run together and burst into a heart
+    let findCount = 0;
+    function playHeartChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [659.25, 783.99, 987.77, 1318.5]; // E5 G5 B5 E6 - sparkly triumphant chime
+        notes.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          const start = ctx.currentTime + i * 0.11;
+          gain.gain.setValueAtTime(0, start);
+          gain.gain.linearRampToValueAtTime(0.22, start + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + 0.55);
+        });
+        setTimeout(() => ctx.close(), 1200);
+      } catch (e) { /* ignore */ }
+    }
+
+    function playBonusCombo() {
+      const left = document.createElement('span');
+      left.className = 'bonus-runner';
+      left.textContent = '🦄';
+      left.style.left = '-10vw';
+      const right = document.createElement('span');
+      right.className = 'bonus-runner';
+      right.textContent = '🦖';
+      right.style.right = '-10vw';
+      document.body.appendChild(left);
+      document.body.appendChild(right);
+
+      // Force layout, then animate both toward the center
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          left.style.left = 'calc(50% - 90px)';
+          right.style.right = 'calc(50% - 90px)';
+        });
+      });
+
+      setTimeout(() => {
+        left.remove();
+        right.remove();
+        playHeartChime();
+
+        const shock = document.createElement('div');
+        shock.className = 'bonus-shock';
+        document.body.appendChild(shock);
+        setTimeout(() => shock.remove(), 950);
+
+        const heart = document.createElement('div');
+        heart.className = 'bonus-heart';
+        heart.textContent = '💖';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+      }, 1350);
+    }
+
     unicorn.addEventListener('click', () => {
       unicorn.classList.remove('running');
       unicorn.classList.add('found');
@@ -1141,6 +1232,11 @@
       // After the pop, it runs off toward the edge it's facing (left)
       setTimeout(() => unicorn.classList.add('running'), 550);
       setTimeout(() => placeUnicorn(true), 1650);
+
+      findCount++;
+      if (findCount % 3 === 0) {
+        setTimeout(playBonusCombo, 1900);
+      }
     });
   })();
 </script>
