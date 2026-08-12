@@ -262,7 +262,9 @@
       transition: transform 0.9s cubic-bezier(.55,0,.85,.35), opacity 0.9s ease-in 0.2s;
     }
     .hidden-unicorn.running.face-right {
-      transform: scale(2) translateX(140vw) rotate(15deg);
+      /* translate first (moves right), then mirror in place so it visually faces
+         the direction it's running instead of appearing to run backwards */
+      transform: scale(2) translateX(140vw) rotate(15deg) scaleX(-1);
     }
     .unicorn-toast {
       position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px) scale(0.8);
