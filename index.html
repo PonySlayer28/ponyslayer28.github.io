@@ -1178,17 +1178,25 @@
       } catch (e) { /* ignore */ }
     }
 
+    // Runs fully independently of the single-creature find animation: its own
+    // elements, its own timers, explicitly centered on the currently visible viewport.
     function playBonusCombo() {
+      const centerY = Math.round(window.innerHeight / 2); // middle of the CURRENTLY VISIBLE area
+
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed !important; inset:0; z-index:999999; pointer-events:none;';
+      document.body.appendChild(overlay);
+
       const left = document.createElement('span');
       left.className = 'bonus-runner face-toward'; // mirrored so it faces right, toward the tyranno
       left.textContent = '🦄';
-      left.style.left = '-10vw';
+      left.style.cssText = 'position:fixed !important; top:' + centerY + 'px; left:-15vw; z-index:999999;';
       const right = document.createElement('span');
       right.className = 'bonus-runner'; // faces left by default, toward the unicorn
       right.textContent = '🦖';
-      right.style.right = '-10vw';
-      document.body.appendChild(left);
-      document.body.appendChild(right);
+      right.style.cssText = 'position:fixed !important; top:' + centerY + 'px; right:-15vw; z-index:999999;';
+      overlay.appendChild(left);
+      overlay.appendChild(right);
 
       // Force a synchronous reflow (more reliable across mobile browsers than double rAF),
       // then animate both toward the center, facing each other.
@@ -1200,20 +1208,22 @@
       }, 30);
 
       setTimeout(() => {
-        left.remove();
-        right.remove();
         playHeartChime();
 
         const shock = document.createElement('div');
         shock.className = 'bonus-shock';
-        document.body.appendChild(shock);
-        setTimeout(() => shock.remove(), 950);
+        shock.style.top = centerY + 'px';
+        overlay.appendChild(shock);
 
         const heart = document.createElement('div');
         heart.className = 'bonus-heart';
+        heart.style.top = centerY + 'px';
         heart.textContent = '💖';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 1200);
+        overlay.appendChild(heart);
+
+        left.remove();
+        right.remove();
+        setTimeout(() => overlay.remove(), 1300);
       }, 2650);
     }
 
@@ -1239,7 +1249,7 @@
 
       findCount++;
       if (findCount % 3 === 0) {
-        setTimeout(playBonusCombo, 1900);
+        setTimeout(playBonusCombo, 2400);
       }
     });
   })();
