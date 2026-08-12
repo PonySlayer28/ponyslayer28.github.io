@@ -212,13 +212,25 @@
     .music-player {
       position: relative; z-index: 2; margin: 0 auto 1.75rem;
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 40px; padding: 0.6rem 1.1rem 0.6rem 0.6rem;
-      display: flex; align-items: center; gap: 0.6rem;
+      border-radius: 24px; padding: 0.6rem 1.1rem;
+      display: flex; flex-direction: column; gap: 0.35rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.4);
       backdrop-filter: blur(8px);
       max-width: calc(100vw - 1.5rem);
       width: fit-content;
       box-sizing: border-box;
+    }
+    .music-controls-row { display: flex; align-items: center; gap: 0.6rem; }
+    .music-progress-row { display: flex; align-items: center; gap: 0.5rem; }
+    .music-time { font-size: 0.68rem; color: var(--muted); min-width: 28px; text-align: center; font-variant-numeric: tabular-nums; }
+    .music-progress {
+      flex: 1; -webkit-appearance: none; appearance: none;
+      height: 4px; border-radius: 2px; background: var(--bg3);
+      accent-color: var(--accent); cursor: pointer;
+    }
+    .music-progress::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 11px; height: 11px; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
     }
     .music-btn {
       width: 38px; height: 38px; border-radius: 50%;
@@ -349,23 +361,30 @@
   <div class="hero-inner">
     <!-- MUSIC PLAYER -->
     <div class="music-player">
-      <button class="music-nav-btn" id="musicPrev" aria-label="Vorheriger Track">
-        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-      </button>
-      <button class="music-btn" id="musicToggle" aria-label="Play/Pause">
-        <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <button class="music-nav-btn" id="musicNext" aria-label="Nächster Track">
-        <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
-      </button>
-      <div class="music-label">
-        <strong id="musicTitle">80 Theme</strong>
-        <span id="musicSubtitle">1 / 4</span>
+      <div class="music-controls-row">
+        <button class="music-nav-btn" id="musicPrev" aria-label="Vorheriger Track">
+          <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="music-btn" id="musicToggle" aria-label="Play/Pause">
+          <svg id="musicIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="music-nav-btn" id="musicNext" aria-label="Nächster Track">
+          <svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM6 18l8.5-6L6 6z"/></svg>
+        </button>
+        <div class="music-label">
+          <strong id="musicTitle">80 Theme</strong>
+          <span id="musicSubtitle">1 / 4</span>
+        </div>
+        <input type="range" class="music-volume" id="musicVolume" min="0" max="1" step="0.01" value="0.7" aria-label="Lautstärke">
+        <button class="music-volume-btn" id="musicVolumeToggle" aria-label="Lautstärke anzeigen">
+          <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </button>
       </div>
-      <input type="range" class="music-volume" id="musicVolume" min="0" max="1" step="0.01" value="0.7" aria-label="Lautstärke">
-      <button class="music-volume-btn" id="musicVolumeToggle" aria-label="Lautstärke anzeigen">
-        <svg id="volumeIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-      </button>
+      <div class="music-progress-row">
+        <span class="music-time" id="musicCurrentTime">0:00</span>
+        <input type="range" class="music-progress" id="musicProgress" min="0" max="100" value="0" step="0.1" aria-label="Fortschritt">
+        <span class="music-time" id="musicDuration">0:00</span>
+      </div>
       <audio id="bgAudio" src="80-theme.mp3" preload="none"></audio>
     </div>
 
@@ -790,6 +809,9 @@
     bgAudio.src = track.file;
     musicTitle.textContent = track.title;
     musicSubtitle.textContent = (trackIndex + 1) + ' / ' + playlist.length;
+    document.getElementById('musicProgress').value = 0;
+    document.getElementById('musicCurrentTime').textContent = '0:00';
+    document.getElementById('musicDuration').textContent = '0:00';
     if (autoplay) {
       bgAudio.play();
       musicIcon.innerHTML = pauseIcon;
@@ -810,6 +832,40 @@
   musicPrev.addEventListener('click', () => loadTrack(trackIndex - 1, true));
   musicNext.addEventListener('click', () => loadTrack(trackIndex + 1, true));
   bgAudio.addEventListener('ended', () => loadTrack(trackIndex + 1, true));
+
+  // Progress bar
+  const musicProgress = document.getElementById('musicProgress');
+  const musicCurrentTime = document.getElementById('musicCurrentTime');
+  const musicDuration = document.getElementById('musicDuration');
+  let seeking = false;
+
+  function formatTime(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60).toString().padStart(2, '0');
+    return m + ':' + s;
+  }
+
+  bgAudio.addEventListener('loadedmetadata', () => {
+    musicDuration.textContent = formatTime(bgAudio.duration);
+  });
+  bgAudio.addEventListener('timeupdate', () => {
+    if (seeking) return;
+    musicCurrentTime.textContent = formatTime(bgAudio.currentTime);
+    if (bgAudio.duration) {
+      musicProgress.value = (bgAudio.currentTime / bgAudio.duration) * 100;
+    }
+  });
+  musicProgress.addEventListener('input', () => {
+    seeking = true;
+    musicCurrentTime.textContent = formatTime((musicProgress.value / 100) * (bgAudio.duration || 0));
+  });
+  musicProgress.addEventListener('change', () => {
+    if (bgAudio.duration) {
+      bgAudio.currentTime = (musicProgress.value / 100) * bgAudio.duration;
+    }
+    seeking = false;
+  });
 
   // Volume control
   const musicPlayer = document.querySelector('.music-player');
