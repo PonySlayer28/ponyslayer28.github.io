@@ -241,6 +241,7 @@
     .music-progress::-moz-range-track { height: 4px; border-radius: 2px; background: var(--bg3); }
     .music-hint { font-size: 0.8rem; color: var(--muted); margin: 0 0 1.25rem; text-align: center; }
     .music-hint.play-hint { color: #2e1c0a; font-weight: 600; }
+    .music-hint.unicorn-hint { color: #2e1c0a; font-weight: 600; }
 
     /* HIDDEN UNICORN EASTER EGG */
     .hidden-unicorn {
@@ -993,11 +994,28 @@
     if (!unicorn) return;
     let revealed = false;
 
-    function placeUnicorn() {
+    function placeUnicorn(avoidViewport) {
       const docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
       const minTop = 300;             // below the hero/player area
       const maxTop = Math.max(minTop + 200, docHeight - 250); // stay above footer
-      const top = minTop + Math.random() * (maxTop - minTop);
+      let top;
+
+      if (avoidViewport) {
+        const viewTop = window.scrollY - 100;
+        const viewBottom = window.scrollY + window.innerHeight + 100;
+        const segments = [];
+        if (viewTop - minTop > 150) segments.push([minTop, viewTop]);
+        if (maxTop - viewBottom > 150) segments.push([viewBottom, maxTop]);
+        if (segments.length) {
+          const seg = segments[Math.floor(Math.random() * segments.length)];
+          top = seg[0] + Math.random() * (seg[1] - seg[0]);
+        } else {
+          top = minTop + Math.random() * (maxTop - minTop); // no space outside viewport, fall back
+        }
+      } else {
+        top = minTop + Math.random() * (maxTop - minTop);
+      }
+
       const left = 4 + Math.random() * 88; // 4%..92% of width
       unicorn.style.top = top + 'px';
       unicorn.style.left = left + 'vw';
@@ -1017,7 +1035,7 @@
       unicorn.classList.add('found');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2200);
-      setTimeout(placeUnicorn, 2400);
+      setTimeout(() => placeUnicorn(true), 2400);
     });
   })();
 </script>
