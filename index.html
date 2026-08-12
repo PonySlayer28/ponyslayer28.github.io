@@ -1158,7 +1158,7 @@
     }
 
     // Bonus combo: after 3 finds this visit, unicorn + tyranno run together and burst into a heart
-    let findCount = 0;
+    let findCount = parseInt(localStorage.getItem('critterFindCount') || '0', 10);
     function playHeartChime() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1266,6 +1266,7 @@
       setTimeout(() => placeUnicorn(true), 1650);
 
       findCount++;
+      localStorage.setItem('critterFindCount', String(findCount));
       if (findCount % 3 === 0) {
         setTimeout(playBonusCombo, 2400);
       }
