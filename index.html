@@ -1234,9 +1234,12 @@
       document.body.appendChild(overlay);
 
       const left = document.createElement('span');
-      left.textContent = '🦄';
       left.style.cssText = 'position:fixed; top:' + centerY + 'px; left:0; font-size:2.2rem; z-index:3; ' +
-        'transform:translateY(-50%) translateX(-20vw) scaleX(-1); will-change:transform;';
+        'transform:translateY(-50%) translateX(-20vw); will-change:transform;';
+      const leftInner = document.createElement('span');
+      leftInner.textContent = '🦄';
+      leftInner.style.cssText = 'display:inline-block; transform:scaleX(-1);';
+      left.appendChild(leftInner);
       const right = document.createElement('span');
       right.textContent = '🦖';
       right.style.cssText = 'position:fixed; top:' + centerY + 'px; right:0; font-size:2.2rem; z-index:2; ' +
@@ -1252,7 +1255,7 @@
         const p = Math.min(1, (now - t0) / duration);
         const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
         const dist = startX * eased;
-        left.style.transform = 'translateY(-50%) translateX(' + dist + 'px) scaleX(-1)';
+        left.style.transform = 'translateY(-50%) translateX(' + dist + 'px)';
         right.style.transform = 'translateY(-50%) translateX(-' + dist + 'px)';
         if (p < 1) {
           requestAnimationFrame(step);
