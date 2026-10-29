@@ -725,6 +725,89 @@
         </div>
       </div>
 
+      <!-- M5Stack Tab5 OS -->
+      <div class="project-card featured reveal">
+        <span class="project-icon">📱</span>
+        <h3>M5Stack Tab5 OS</h3>
+        <p data-lang="de">NuttX-basiertes Betriebssystem für M5Stack Tab5. Kernel stabil, I2C-Keyboard-Integration in Progress, 34 MB RAM. Aktives Reverse-Engineering mit Arduino-CLI und ESP-IDF 5.5.</p>
+        <p data-lang="en">NuttX-based OS for M5Stack Tab5. Stable kernel, I2C keyboard integration in progress, 34 MB RAM. Active reverse-engineering with Arduino-CLI and ESP-IDF 5.5.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>NSH Shell funktioniert, uname und free laufen</li>
+          <li>I2C-Keyboard-Adresse 0x6D identifiziert</li>
+          <li>ST7121 Display und WiFi noch in Entwicklung</li>
+          <li>Komplette Hardware-Dokumentation erarbeitet</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>NSH shell working, uname and free commands active</li>
+          <li>I2C keyboard address 0x6D identified</li>
+          <li>ST7121 display and WiFi under development</li>
+          <li>Complete hardware documentation compiled</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">NuttX</span>
+          <span class="project-tag">RTOS</span>
+          <span class="project-tag">ESP-IDF</span>
+          <span class="project-tag">Hardware</span>
+        </div>
+      </div>
+
+      <!-- M5TabOS English -->
+      <div class="project-card reveal">
+        <span class="project-icon">🌐</span>
+        <h3>M5TabOS English</h3>
+        <p data-lang="de">Englische Übersetzung + Port des M5TabOS-Firmware auf ESP-IDF 5.5. 23 Dateien lokalisiert, Build-Fehler für moderne Toolchain gefixt (GDMA_IRAM_SAFE, NimBLE).</p>
+        <p data-lang="en">English translation + port of M5TabOS firmware to ESP-IDF 5.5. 23 files localized, build errors fixed for modern toolchain (GDMA_IRAM_SAFE, NimBLE).</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>Komplette Lokalisierung Deutsch → Englisch</li>
+          <li>Build für ESP-IDF 5.5 repariert (on_refresh_done, Bluetooth NimBLE)</li>
+          <li>Pull Request #1 eingereicht, Upstream-Status ausstehend</li>
+          <li>Keyboard-Pairing über BT vorbereitet</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>Full German-to-English localization</li>
+          <li>Fixed build for ESP-IDF 5.5 (on_refresh_done, Bluetooth NimBLE)</li>
+          <li>Pull request #1 submitted, awaiting upstream merge</li>
+          <li>Bluetooth keyboard pairing prepared</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">Firmware</span>
+          <span class="project-tag">i18n</span>
+          <span class="project-tag">Open Source</span>
+          <span class="project-tag">Embedded</span>
+        </div>
+        <a href="https://github.com/cparadaa/M5TabOS-sistema" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:1rem;font-size:0.82rem;color:var(--accent);text-decoration:none;border:1px solid var(--border);padding:0.3rem 0.75rem;border-radius:20px;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Repository
+        </a>
+      </div>
+
+      <!-- Cinque Terre Wanderkarten -->
+      <div class="project-card reveal">
+        <span class="project-icon">🗺️</span>
+        <h3 data-lang="de">Cinque Terre Wanderkarten</h3>
+        <h3 data-lang="en">Cinque Terre Hiking Maps</h3>
+        <p data-lang="de">Interaktive 2D/3D-Wanderkarten für 171 Touren in Cinque Terre (Ligurien). Live-GPS-Tracking, personalisierte Gehzeiten basierend auf Strava, Höhendaten aus Geländemodellen. Läuft auf eigenem Home Server mit automatische Cron-Aktualisierung.</p>
+        <p data-lang="en">Interactive 2D/3D hiking maps for 171 routes in Cinque Terre (Liguria). Live GPS tracking, personalized walking times from Strava, elevation from terrain models. Runs on home server with automatic cron updates.</p>
+        <ul class="project-highlights" data-lang="de">
+          <li>171 kartografierte Touren mit GPX-Export und 3D-Ansicht</li>
+          <li>Live-GPS-Position während der Wanderung</li>
+          <li>Gehzeit-Vorhersage pro Tour basierend auf Strava-Durchschnitte</li>
+          <li>Montags 09:40 Cron-Update aus Strava-Sync</li>
+        </ul>
+        <ul class="project-highlights" data-lang="en">
+          <li>171 mapped routes with GPX export and 3D view</li>
+          <li>Live GPS position during hike</li>
+          <li>Walking time prediction per route from Strava averages</li>
+          <li>Monday 09:40 cron update from Strava sync</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">Mapping</span>
+          <span class="project-tag">Strava API</span>
+          <span class="project-tag">GPS</span>
+          <span class="project-tag">Home Server</span>
+        </div>
+      </div>
+
       <!-- Strava / Sport -->
       <div class="project-card reveal">
         <span class="project-icon">🚴</span>
